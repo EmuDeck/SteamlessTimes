@@ -39,6 +39,11 @@ export default definePlugin((serverAPI: ServerAPI) =>
 		updatePlaytimes(serverAPI);
 	});
 
+	let uiHook = SteamClient.Apps.RegisterForGameActionShowUI(() =>
+	{
+		updatePlaytimes(serverAPI);
+	});
+
 	updatePlaytimes(serverAPI);
 
 	return {
@@ -50,6 +55,7 @@ export default definePlugin((serverAPI: ServerAPI) =>
 			lifetimeHook!.unregister();
 			startHook!.unregister();
 			changeHook!.unregister();
+			uiHook!.unregister();
 		}
 	};
 });

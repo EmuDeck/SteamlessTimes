@@ -1,105 +1,56 @@
-import {
-  ButtonItem,
-  definePlugin,
-  DialogButton,
-  Menu,
-  MenuItem,
-  PanelSection,
-  PanelSectionRow,
-  Router,
-  ServerAPI,
-  showContextMenu,
-  staticClasses,
-} from "decky-frontend-lib";
-import { VFC } from "react";
-import { FaShip } from "react-icons/fa";
+import {definePlugin, ServerAPI, staticClasses,} from "decky-frontend-lib";
+import {FaRegClock} from "react-icons/fa";
+import {SteamClient} from "./SteamClient"
+import {AppStore} from "./AppStore";
+import {App} from "./App";
+import {GameActionStartParams} from "./Interfaces";
+import {updatePlaytimes} from "./Api";
 
-import logo from "../assets/logo.png";
+declare global
+{
+	let SteamClient: SteamClient;
+	let appStore: AppStore
+}
 
-// interface AddMethodArgs {
-//   left: number;
-//   right: number;
-// }
+export default definePlugin((serverAPI: ServerAPI) =>
+{
+	let lifetimeHook = SteamClient.GameSessions.RegisterForAppLifetimeNotifications((update: any) =>
+	{
+		console.log("Emutimes AppLifetimeNotification", update);
+		serverAPI.callPluginMethod("on_lifetime_callback", {data: update}).then(() =>
+		{
+			updatePlaytimes(serverAPI);
+		});
+	});
+	let startHook = SteamClient.Apps.RegisterForGameActionStart((actionType: number, id: string, action: string) =>
+	{
+		console.log("Emutimes GameActionStart", id);
+		serverAPI.callPluginMethod<GameActionStartParams, {}>("on_game_start_callback", {
+			idk: actionType,
+			game_id: id,
+			action: action
+		}).then(() =>
+		{
+		});
+	});
 
-const Content: VFC<{ serverAPI: ServerAPI }> = ({}) => {
-  // const [result, setResult] = useState<number | undefined>();
+	let changeHook = SteamClient.Apps.RegisterForAppOverviewChanges(() =>
+	{
+		updatePlaytimes(serverAPI);
+	});
 
-  // const onClick = async () => {
-  //   const result = await serverAPI.callPluginMethod<AddMethodArgs, number>(
-  //     "add",
-  //     {
-  //       left: 2,
-  //       right: 2,
-  //     }
-  //   );
-  //   if (result.success) {
-  //     setResult(result.result);
-  //   }
-  // };
+	updatePlaytimes(serverAPI);
 
-  return (
-    <PanelSection title="Panel Section">
-      <PanelSectionRow>
-        <ButtonItem
-          layout="below"
-          onClick={(e) =>
-            showContextMenu(
-              <Menu label="Menu" cancelText="CAAAANCEL" onCancel={() => {}}>
-                <MenuItem onSelected={() => {}}>Item #1</MenuItem>
-                <MenuItem onSelected={() => {}}>Item #2</MenuItem>
-                <MenuItem onSelected={() => {}}>Item #3</MenuItem>
-              </Menu>,
-              e.currentTarget ?? window
-            )
-          }
-        >
-          Server says yolo
-        </ButtonItem>
-      </PanelSectionRow>
-
-      <PanelSectionRow>
-        <div style={{ display: "flex", justifyContent: "center" }}>
-          <img src={logo} />
-        </div>
-      </PanelSectionRow>
-
-      <PanelSectionRow>
-        <ButtonItem
-          layout="below"
-          onClick={() => {
-            Router.CloseSideMenus();
-            Router.Navigate("/decky-plugin-test");
-          }}
-        >
-          Router
-        </ButtonItem>
-      </PanelSectionRow>
-    </PanelSection>
-  );
-};
-
-const DeckyPluginRouterTest: VFC = () => {
-  return (
-    <div style={{ marginTop: "50px", color: "white" }}>
-      Hello World!
-      <DialogButton onClick={() => Router.NavigateToStore()}>
-        Go to Store
-      </DialogButton>
-    </div>
-  );
-};
-
-export default definePlugin((serverApi: ServerAPI) => {
-  serverApi.routerHook.addRoute("/decky-plugin-test", DeckyPluginRouterTest, {
-    exact: true,
-  });
-
-  return {
-    title: <div className={staticClasses.Title}>Example Plugin</div>,
-    content: <Content serverAPI={serverApi} />,
-    icon: <FaShip />,
-    onDismount() {
-      serverApi.routerHook.removeRoute("/decky-plugin-test");
-    },
-  };
+	return {
+		title: <div className={staticClasses.Title}>Emutimes</div>,
+		content: <App serverAPI={serverAPI}/>,
+		icon: <FaRegClock/>,
+		onDismount()
+		{
+			lifetimeHook!.unregister();
+			startHook!.unregister();
+			changeHook!.unregister();
+		},
+		alwaysRender: false
+	};
 });

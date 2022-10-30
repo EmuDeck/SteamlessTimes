@@ -1,5 +1,5 @@
 import {Component} from "react";
-import {AppProps, AppState, PlayTimes} from "./Interfaces";
+import {AppProps, AppState, PlayTimes, ResetPlaytimeParams} from "./Interfaces";
 import {ButtonItem, PanelSection, PanelSectionRow, ServerResponse} from "decky-frontend-lib";
 
 export class App extends Component<AppProps, AppState>
@@ -31,24 +31,51 @@ export class App extends Component<AppProps, AppState>
 		return (
 			<PanelSection title="Reset Play Time">
 				{
-					Object.entries(this.state.play_times).map(([key, value]) =>
+					(() =>
 					{
-						return (
+						if (Object.entries(this.state.play_times).length)
+							return Object.entries(this.state.play_times).map(([key, value]) =>
+							{
+								let overview = appStore.GetAppOverviewByGameID(key)
+								if (overview)
+									return (
+										<PanelSectionRow>
+											<ButtonItem onClick={() =>
+											{
+												this.props.serverAPI.callPluginMethod<ResetPlaytimeParams, {}>("reset_playtime", {game_id: key}).then(() =>
+												{
+													this.loadState();
+													console.log("Emutimes reset", key, "previous time", value, "seconds")
+													overview.minutes_playtime_forever = "0";
+												})
+											}}>
+												Reset {overview.display_name}: {(() =>
+												{
+													if (+(value / 60.0).toFixed(1) < 60.0)
+													{
+														if (+(value / 60.0).toFixed(1) == 60.0)
+															return (value / 60.0).toFixed(1) + " Minute"
+														return (value / 60.0).toFixed(1) + " Minutes"
+													} else
+													{
+														if (+((value / 60.0) / 60.0).toFixed(1) == 60.0)
+															return ((value / 60.0) / 60.0).toFixed(1) + " Hour"
+														return ((value / 60.0) / 60.0).toFixed(1) + " Hours"
+													}
+												})()}
+											</ButtonItem>
+										</PanelSectionRow>
+									);
+								else return undefined
+
+							})
+						else return (
 							<PanelSectionRow>
-								<ButtonItem onClick={() => {
-									this.props.serverAPI.callPluginMethod<{game_id: string}, {}>("reset_playtime", {game_id: key}).then(() =>
-									{
-										this.loadState();
-										console.log("Emutimes reset", key, "previous time", value, "seconds")
-										appStore.GetAppOverviewByGameID(key).minutes_playtime_forever = "0";
-									})
-								}}>
-									Reset {appStore.GetAppOverviewByGameID(key).display_name}: {(+(value / 60.0).toFixed(1) < 60.0) ? (value / 60.0).toFixed(1) + " Minutes" : ((value / 60.0) / 60.0).toFixed(1) + " Hours"}
-								</ButtonItem>
+								Nothing here!<br/>
+								Start a game to save playtimes, you can reset them here
 							</PanelSectionRow>
 						);
-
-					})
+					})()
 				}
 			</PanelSection>
 		);

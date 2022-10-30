@@ -12,6 +12,11 @@ export interface GameActionStartParams
 	action: string
 }
 
+export interface ResetPlaytimeParams
+{
+	game_id: string
+}
+
 export interface AppProps
 {
 	serverAPI: ServerAPI

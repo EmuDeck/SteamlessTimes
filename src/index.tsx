@@ -50,7 +50,6 @@ export default definePlugin((serverAPI: ServerAPI) =>
 			lifetimeHook!.unregister();
 			startHook!.unregister();
 			changeHook!.unregister();
-		},
-		alwaysRender: false
+		}
 	};
 });

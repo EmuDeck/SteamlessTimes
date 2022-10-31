@@ -5,6 +5,7 @@ import {AppStore} from "./AppStore";
 import {App} from "./App";
 import {GameActionStartParams} from "./Interfaces";
 import {updatePlaytimes} from "./Api";
+import {patchAppPage} from "./AppPatch";
 
 declare global
 {
@@ -46,6 +47,8 @@ export default definePlugin((serverAPI: ServerAPI) =>
 
 	updatePlaytimes(serverAPI);
 
+	let appPatch = patchAppPage(serverAPI);
+
 	return {
 		title: <div className={staticClasses.Title}>Emutimes</div>,
 		content: <App serverAPI={serverAPI}/>,
@@ -56,6 +59,7 @@ export default definePlugin((serverAPI: ServerAPI) =>
 			startHook!.unregister();
 			changeHook!.unregister();
 			uiHook!.unregister();
+			serverAPI.routerHook.removePatch("/library/app/:appid", appPatch);
 		}
 	};
 });

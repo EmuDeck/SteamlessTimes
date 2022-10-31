@@ -1,5 +1,5 @@
 {
-  "name": "emutimes",
+  "name": "steamlesstimes",
   "version": "1.0.0",
   "description": "Plugin for keeping track of play time of non steam games. Part of the EmuDeck Project",
   "scripts": {
@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/EmuDeck/Emutimes.git"
+    "url": "git+https://github.com/EmuDeck/SteamlessTimes.git"
   },
   "keywords": [
     "decky",
@@ -21,9 +21,9 @@
   "author": "Witherking25 <witherking@withertech.com>",
   "license": "GPL-3",
   "bugs": {
-    "url": "https://github.com/EmuDeck/Emutimes/issues"
+    "url": "https://github.com/EmuDeck/SteamlessTimes/issues"
   },
-  "homepage": "https://github.com/EmuDeck/Emutimes#readme",
+  "homepage": "https://github.com/EmuDeck/SteamlessTimes#readme",
   "devDependencies": {
     "@rollup/plugin-commonjs": "^21.1.0",
     "@rollup/plugin-json": "^4.1.0",

@@ -17,7 +17,7 @@ export default definePlugin((serverAPI: ServerAPI) =>
 {
 	let lifetimeHook = SteamClient.GameSessions.RegisterForAppLifetimeNotifications((update: any) =>
 	{
-		console.log("Emutimes AppLifetimeNotification", update);
+		console.log("SteamlessTimes AppLifetimeNotification", update);
 		serverAPI.callPluginMethod("on_lifetime_callback", {data: update}).then(() =>
 		{
 			updatePlaytimes(serverAPI);
@@ -25,7 +25,7 @@ export default definePlugin((serverAPI: ServerAPI) =>
 	});
 	let startHook = SteamClient.Apps.RegisterForGameActionStart((actionType: number, id: string, action: string) =>
 	{
-		console.log("Emutimes GameActionStart", id);
+		console.log("SteamlessTimes GameActionStart", id);
 		serverAPI.callPluginMethod<GameActionStartParams, {}>("on_game_start_callback", {
 			idk: actionType,
 			game_id: id,
@@ -50,7 +50,7 @@ export default definePlugin((serverAPI: ServerAPI) =>
 	let appPatch = patchAppPage(serverAPI);
 
 	return {
-		title: <div className={staticClasses.Title}>Emutimes</div>,
+		title: <div className={staticClasses.Title}>SteamlessTimes</div>,
 		content: <App serverAPI={serverAPI}/>,
 		icon: <FaRegClock/>,
 		onDismount()

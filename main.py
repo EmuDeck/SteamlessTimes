@@ -6,8 +6,8 @@ import time
 
 from settings import SettingsManager
 
-logging.basicConfig(filename="/tmp/emutimes.log",
-                    format='[Emutimes] %(asctime)s %(levelname)s %(message)s',
+logging.basicConfig(filename="/tmp/steamlesstimes.log",
+                    format='[SteamlessTimes] %(asctime)s %(levelname)s %(message)s',
                     filemode='w+',
                     force=True)
 logger = logging.getLogger()
@@ -30,7 +30,7 @@ class Plugin:
     last_started_game: str = ""
 
     async def _main(self):
-        Plugin.settings = SettingsManager("emutimes")
+        Plugin.settings = SettingsManager("steamlesstimes")
         await Plugin.read(self)
         Plugin.playtimes = await Plugin.getSetting(self, "playtimes", {})
 

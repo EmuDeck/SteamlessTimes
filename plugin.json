@@ -1,10 +1,10 @@
 {
-  "name": "Emutimes",
+  "name": "SteamlessTimes",
   "author": "Witherking25",
   "flags": [],
   "publish": {
-    "tags": ["EmmuDeck"],
+    "tags": ["EmuDeck"],
     "description": "Plugin for keeping track of play time of non steam games. Part of the EmuDeck Project",
-    "image": "https://opengraph.githubassets.com/1/SteamDeckHomebrew/PluginLoader"
+    "image": "https://opengraph.githubassets.com/1/EmuDeck/SteamlessTimes"
   }
 }

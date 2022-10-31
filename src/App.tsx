@@ -45,7 +45,7 @@ export class App extends Component<AppProps, AppState>
 												this.props.serverAPI.callPluginMethod<ResetPlaytimeParams, {}>("reset_playtime", {game_id: key}).then(() =>
 												{
 													this.loadState();
-													console.log("Emutimes reset", key, "previous time", value, "seconds")
+													console.log("SteamlessTimes reset", key, "previous time", value, "seconds")
 													overview.minutes_playtime_forever = "0";
 												})
 											}}>

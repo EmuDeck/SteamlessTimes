@@ -20,6 +20,7 @@ coverage
 .env
 
 # Dependency directory
+.pnpm-store
 node_modules
 bower_components
 
@@ -44,3 +45,6 @@ yalc.lock
 # Ignore output folder
 
 backend/out
+build
+
+deck.json

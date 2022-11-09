@@ -1,4 +1,4 @@
-import {definePlugin, ServerAPI, staticClasses,} from "decky-frontend-lib";
+import {definePlugin, ServerAPI, } from "decky-frontend-lib";
 import {FaRegClock} from "react-icons/fa";
 import {SteamClient} from "./SteamClient"
 import {AppStore} from "./AppStore";
@@ -6,6 +6,7 @@ import {App} from "./App";
 import {GameActionStartParams} from "./Interfaces";
 import {updatePlaytimes} from "./Api";
 import {patchAppPage} from "./AppPatch";
+import {Title} from "./Title";
 
 declare global
 {
@@ -15,7 +16,7 @@ declare global
 
 export default definePlugin((serverAPI: ServerAPI) =>
 {
-	let lifetimeHook = SteamClient.GameSessions.RegisterForAppLifetimeNotifications((update: any) =>
+	const lifetimeHook = SteamClient.GameSessions.RegisterForAppLifetimeNotifications((update: any) =>
 	{
 		console.log("SteamlessTimes AppLifetimeNotification", update);
 		serverAPI.callPluginMethod("on_lifetime_callback", {data: update}).then(() =>
@@ -23,34 +24,26 @@ export default definePlugin((serverAPI: ServerAPI) =>
 			updatePlaytimes(serverAPI);
 		});
 	});
-	let startHook = SteamClient.Apps.RegisterForGameActionStart((actionType: number, id: string, action: string) =>
+	const startHook = SteamClient.Apps.RegisterForGameActionStart((actionType: number, id: string, action: string) =>
 	{
 		console.log("SteamlessTimes GameActionStart", id);
 		serverAPI.callPluginMethod<GameActionStartParams, {}>("on_game_start_callback", {
 			idk: actionType,
 			game_id: id,
 			action: action
-		}).then(() =>
-		{
-		});
+		}).then(() => updatePlaytimes(serverAPI));
 	});
 
-	let changeHook = SteamClient.Apps.RegisterForAppOverviewChanges(() =>
-	{
-		updatePlaytimes(serverAPI);
-	});
-
-	let uiHook = SteamClient.Apps.RegisterForGameActionShowUI(() =>
-	{
-		updatePlaytimes(serverAPI);
-	});
+	const changeHook = SteamClient.Apps.RegisterForAppOverviewChanges(() => updatePlaytimes(serverAPI));
+	const uiHook = SteamClient.Apps.RegisterForGameActionShowUI(() => updatePlaytimes(serverAPI));
+	const suspendHook = SteamClient.System.RegisterForOnSuspendRequest(() => serverAPI.callPluginMethod("on_suspend_callback", {}).then(() => updatePlaytimes(serverAPI)));
+	const resumeHook = SteamClient.System.RegisterForOnResumeFromSuspend(() => serverAPI.callPluginMethod("on_resume_callback", {}).then(() => updatePlaytimes(serverAPI)));
 
 	updatePlaytimes(serverAPI);
 
-	let appPatch = patchAppPage(serverAPI);
-
+	const appPatch = patchAppPage(serverAPI);
 	return {
-		title: <div className={staticClasses.Title}>SteamlessTimes</div>,
+		title: <Title>SeamlessTimes</Title>,
 		content: <App serverAPI={serverAPI}/>,
 		icon: <FaRegClock/>,
 		onDismount()
@@ -59,6 +52,9 @@ export default definePlugin((serverAPI: ServerAPI) =>
 			startHook!.unregister();
 			changeHook!.unregister();
 			uiHook!.unregister();
+			suspendHook!.unregister();
+			resumeHook!.unregister();
+
 			serverAPI.routerHook.removePatch("/library/app/:appid", appPatch);
 		}
 	};

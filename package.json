@@ -1,12 +1,13 @@
 {
 	"name": "steamlesstimes",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "Plugin for keeping track of play time of non steam games. Part of the EmuDeck Project",
 	"scripts": {
 		"build": "shx rm -rf dist && rollup -c",
 		"watch": "rollup -c -w",
 		"test": "echo \"Error: no test specified\" && exit 1",
-		"package": "./package.sh SteamlessTimes 1.0.0"
+		"package": "dbuild build",
+		"start": "dbuild deploy"
 	},
 	"repository": {
 		"type": "git",
@@ -37,7 +38,8 @@
 		"rollup-plugin-import-assets": "^1.1.1",
 		"shx": "^0.3.4",
 		"tslib": "^2.4.0",
-		"typescript": "^4.7.4"
+		"typescript": "^4.7.4",
+		"deckbuild": "^1.0.9"
 	},
 	"dependencies": {
 		"decky-frontend-lib": "^3.6.1",

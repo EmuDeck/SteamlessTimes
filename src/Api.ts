@@ -10,11 +10,18 @@ export function updatePlaytimes(serverAPI: ServerAPI)
 			console.log("Emutimes playtimes", response.result);
 			Object.entries(response.result).forEach(([key, value]) =>
 			{
-				let overview = appStore.GetAppOverviewByGameID(key)
-				if (overview)
+				try
 				{
-					overview.minutes_playtime_forever = (value / 60.0).toFixed(1);
-					console.log("Emutimes", key, "played for", value, "seconds");
+					let overview = appStore.GetAppOverviewByGameID(key)
+					if (overview)
+					{
+						overview.minutes_playtime_forever = (value / 60.0).toFixed(1);
+						console.log("Emutimes", key, "played for", value, "seconds");
+					}
+				}
+				catch (e)
+				{
+					console.log(e)
 				}
 			});
 		}

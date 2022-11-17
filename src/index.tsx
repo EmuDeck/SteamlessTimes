@@ -34,10 +34,10 @@ export default definePlugin((serverAPI: ServerAPI) =>
 		}).then(() => updatePlaytimes(serverAPI));
 	});
 
-	const changeHook = SteamClient.Apps.RegisterForAppOverviewChanges(() => updatePlaytimes(serverAPI));
+	// const changeHook = SteamClient.Apps.RegisterForAppOverviewChanges(() => updatePlaytimes(serverAPI));
 	const uiHook = SteamClient.Apps.RegisterForGameActionShowUI(() => updatePlaytimes(serverAPI));
-	const suspendHook = SteamClient.System.RegisterForOnSuspendRequest(() => serverAPI.callPluginMethod("on_suspend_callback", {}).then(() => updatePlaytimes(serverAPI)));
-	const resumeHook = SteamClient.System.RegisterForOnResumeFromSuspend(() => serverAPI.callPluginMethod("on_resume_callback", {}).then(() => updatePlaytimes(serverAPI)));
+	// const suspendHook = SteamClient.System.RegisterForOnSuspendRequest(() => serverAPI.callPluginMethod("on_suspend_callback", {}).then(() => updatePlaytimes(serverAPI)));
+	// const resumeHook = SteamClient.System.RegisterForOnResumeFromSuspend(() => serverAPI.callPluginMethod("on_resume_callback", {}).then(() => updatePlaytimes(serverAPI)));
 
 	updatePlaytimes(serverAPI);
 
@@ -50,10 +50,10 @@ export default definePlugin((serverAPI: ServerAPI) =>
 		{
 			lifetimeHook!.unregister();
 			startHook!.unregister();
-			changeHook!.unregister();
+			// changeHook!.unregister();
 			uiHook!.unregister();
-			suspendHook!.unregister();
-			resumeHook!.unregister();
+			// suspendHook!.unregister();
+			// resumeHook!.unregister();
 
 			serverAPI.routerHook.removePatch("/library/app/:appid", appPatch);
 		}

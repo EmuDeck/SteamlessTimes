@@ -1,6 +1,6 @@
 {
 	"name": "steamlesstimes",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"description": "Plugin for keeping track of play time of non steam games. Part of the EmuDeck Project",
 	"scripts": {
 		"build": "shx rm -rf dist && rollup -c",

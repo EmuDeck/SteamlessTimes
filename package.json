@@ -32,6 +32,7 @@
 		"@rollup/plugin-node-resolve": "^13.3.0",
 		"@rollup/plugin-replace": "^4.0.0",
 		"@rollup/plugin-typescript": "^8.3.3",
+		"@types/lodash": "^4.14.184",
 		"@types/react": "16.14.0",
 		"@types/webpack": "^5.28.0",
 		"rollup": "^2.77.1",
@@ -39,6 +40,8 @@
 		"shx": "^0.3.4",
 		"tslib": "^2.4.0",
 		"typescript": "^4.7.4",
+		"mobx": "5",
+		"lodash": "^4.17.21",
 		"deckbuild": "^1.0.9"
 	},
 	"dependencies": {

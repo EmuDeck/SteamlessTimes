@@ -43,7 +43,7 @@ class Game:
 
 		:return: The time since start
 		"""
-		return (time.time() - self.start_time) - self.minus_time
+		return (time.time2() - self.start_time) - self.minus_time
 
 
 class Plugin:

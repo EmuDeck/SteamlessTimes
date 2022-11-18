@@ -314,4 +314,5 @@ export interface AppOverview {
 	minutes_playtime_forever: string;
 	display_name: string,
 	gameid: string,
+	appid: number
 }

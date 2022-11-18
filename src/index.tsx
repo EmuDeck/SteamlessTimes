@@ -7,6 +7,7 @@ import {GameActionStartParams} from "./Interfaces";
 import {updatePlaytimes} from "./Api";
 import {patchAppPage} from "./AppPatch";
 import {Title} from "./Title";
+import { debounce } from "lodash";
 
 declare global
 {
@@ -33,13 +34,23 @@ export default definePlugin((serverAPI: ServerAPI) =>
 			action: action
 		}).then(() => updatePlaytimes(serverAPI));
 	});
+	const updatePlaytimesDebounced = debounce(() => updatePlaytimes(serverAPI), 100);
+	const detailsHook = SteamClient.Apps.RegisterForAppOverviewChanges(() =>
+	{
+		updatePlaytimesDebounced();
+	});
 
-	// const changeHook = SteamClient.Apps.RegisterForAppOverviewChanges(() => updatePlaytimes(serverAPI));
 	const uiHook = SteamClient.Apps.RegisterForGameActionShowUI(() => updatePlaytimes(serverAPI));
-	// const suspendHook = SteamClient.System.RegisterForOnSuspendRequest(() => serverAPI.callPluginMethod("on_suspend_callback", {}).then(() => updatePlaytimes(serverAPI)));
-	// const resumeHook = SteamClient.System.RegisterForOnResumeFromSuspend(() => serverAPI.callPluginMethod("on_resume_callback", {}).then(() => updatePlaytimes(serverAPI)));
-
-	updatePlaytimes(serverAPI);
+	const suspendHook = SteamClient.System.RegisterForOnSuspendRequest(() =>
+	{
+		console.log("SteamlessTimes Suspend");
+		serverAPI.callPluginMethod("on_suspend_callback", {}).then(() => updatePlaytimes(serverAPI));
+	});
+	const resumeHook = SteamClient.System.RegisterForOnResumeFromSuspend(() =>
+	{
+		console.log("SteamlessTimes Resume");
+		serverAPI.callPluginMethod("on_resume_callback", {}).then(() => updatePlaytimes(serverAPI));
+	});
 
 	const appPatch = patchAppPage(serverAPI);
 	return {
@@ -50,10 +61,10 @@ export default definePlugin((serverAPI: ServerAPI) =>
 		{
 			lifetimeHook!.unregister();
 			startHook!.unregister();
-			// changeHook!.unregister();
+			detailsHook!.unregister();
 			uiHook!.unregister();
-			// suspendHook!.unregister();
-			// resumeHook!.unregister();
+			suspendHook!.unregister();
+			resumeHook!.unregister();
 
 			serverAPI.routerHook.removePatch("/library/app/:appid", appPatch);
 		}

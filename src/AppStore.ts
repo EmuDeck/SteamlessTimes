@@ -1,9 +1,11 @@
 import {AppOverview} from "./SteamClient";
+import {ObservableMap} from "mobx";
 
 export interface AppStore
 {
+	m_mapApps: ObservableMap<number, AppOverview>;
 	UpdateAppOverview: any,
-	GetAppOverviewByAppID: any,
+	GetAppOverviewByAppID: (id: number) => AppOverview,
 	GetAppOverviewByGameID: (id: string) => AppOverview,
 	CompareSortAs: any,
 	allApps: any,

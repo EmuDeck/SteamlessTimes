@@ -1,4 +1,4 @@
-interface Hook
+export interface Hook
 {
 	unregister: () => void
 }

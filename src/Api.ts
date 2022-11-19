@@ -1,5 +1,8 @@
 import {ServerAPI, ServerResponse} from "decky-frontend-lib";
 import {PlayTimes} from "./Interfaces";
+import {debounce} from "lodash-es";
+
+export const updatePlaytimesThrottled = debounce((serverAPI: ServerAPI) => updatePlaytimes(serverAPI), 1000, {leading: true});
 
 export function updatePlaytimes(serverAPI: ServerAPI)
 {

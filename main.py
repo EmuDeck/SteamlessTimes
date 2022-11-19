@@ -36,14 +36,13 @@ class Game:
 		self.minus_time += time.time() - self.paused_time
 		self.paused_time = 0
 
-	@property
 	def time_since_start(self) -> float:
 		"""
 		Gets the time since the start of the game
 
 		:return: The time since start
 		"""
-		return (time.time2() - self.start_time) - self.minus_time
+		return (time.time() - self.start_time) - self.minus_time
 
 
 class Plugin:
@@ -80,6 +79,7 @@ class Plugin:
 			logger.debug(f"Ignoring steam game {appId}")
 			return
 		if data["bRunning"]:
+			logger.debug(f"Game {instanceId} is running")
 			if Plugin.last_started_game != "":
 				Plugin.running_games[instanceId] = Game(Plugin.last_started_game)
 				logger.debug(f"Started playing {Plugin.last_started_game}")
@@ -87,13 +87,17 @@ class Plugin:
 			else:
 				logger.warning(f"No last game running, cannot track {instanceId}")
 		else:
+			logger.debug(f"Game {instanceId} is not running")
 			if instanceId in Plugin.running_games:
-				playtime = Plugin.running_games[instanceId].time_since_start
+				logger.debug(f"Game {instanceId} was previously running")
+				playtime = Plugin.running_games[instanceId].time_since_start()
 				gameId = str(Plugin.running_games[instanceId].game_id)
 				del (Plugin.running_games[instanceId])
 				if gameId in Plugin.playtimes:
+					logger.debug(f"Game {instanceId} has existing playtimes, appending")
 					Plugin.playtimes[gameId] += playtime
 				else:
+					logger.debug(f"Game {instanceId} does not have existing playtimes, assigning")
 					Plugin.playtimes[gameId] = playtime
 				logger.debug(f"Played {gameId} for {playtime}s")
 				await Plugin.set_setting(self, "playtimes", Plugin.playtimes)
@@ -131,6 +135,7 @@ class Plugin:
 		"""
 		while Plugin.playtimes is None:
 			await asyncio.sleep(0.1)
+		logger.debug(f"Got playtimes {Plugin.playtimes}")
 		return Plugin.playtimes
 
 	async def reset_playtime(self, game_id: str) -> None:

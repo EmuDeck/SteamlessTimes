@@ -1,7 +1,7 @@
 {
   "name": "SteamlessTimes",
   "author": "Witherking25",
-  "flags": [],
+  "flags": ["debug"],
   "publish": {
     "tags": ["EmuDeck"],
     "description": "Plugin for keeping track of play time of non steam games. Part of the EmuDeck Project",

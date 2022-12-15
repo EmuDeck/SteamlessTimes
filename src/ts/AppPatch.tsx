@@ -4,6 +4,7 @@ import {PlayTimes} from "./Interfaces";
 import {AppOverview} from "./SteamClient";
 
 export const patchAppPage = (serverAPI: ServerAPI) => {
+	// @ts-ignore
 	return serverAPI.routerHook.addPatch("/library/app/:appid", (props: { path: string, children: ReactElement}) =>
 	{
 		afterPatch(

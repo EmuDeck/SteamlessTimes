@@ -1,6 +1,6 @@
-import {ServerAPI, ServerResponse} from "decky-frontend-lib";
-import {PlayTimes} from "./Interfaces";
 import {debounce} from "lodash-es";
+import {PlayTimes} from "./Interfaces";
+import {ServerAPI, ServerResponse} from "decky-frontend-lib";
 
 export const updatePlaytimesThrottled = debounce((serverAPI: ServerAPI) => updatePlaytimes(serverAPI), 1000, {leading: true});
 
@@ -10,7 +10,7 @@ export function updatePlaytimes(serverAPI: ServerAPI)
 	{
 		if (response.success)
 		{
-			console.log("Emutimes playtimes", response.result);
+			console.log("MetaDeck playtimes", response.result);
 			Object.entries(response.result).forEach(([key, value]) =>
 			{
 				try
@@ -19,7 +19,7 @@ export function updatePlaytimes(serverAPI: ServerAPI)
 					if (overview)
 					{
 						overview.minutes_playtime_forever = (value / 60.0).toFixed(1);
-						console.log("Emutimes", key, "played for", value, "seconds");
+						console.log("MetaDeck", key, "played for", value, "seconds");
 					}
 				}
 				catch (e)

@@ -10,7 +10,9 @@ import {Title} from "./Title";
 
 declare global
 {
+	// @ts-ignore
 	let SteamClient: SteamClient;
+	// @ts-ignore
 	let appStore: AppStore
 }
 

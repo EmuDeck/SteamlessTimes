@@ -45,7 +45,7 @@
 		"deckbuild": "^1.0.9"
 	},
 	"dependencies": {
-		"decky-frontend-lib": "^3.6.1",
+		"decky-frontend-lib": "^3.18.3",
 		"react-icons": "^4.4.0"
 	},
 	"pnpm": {

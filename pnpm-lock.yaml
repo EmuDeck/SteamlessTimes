@@ -9,13 +9,15 @@ specifiers:
   '@types/lodash-es': ^4.14.184
   '@types/react': 16.14.0
   '@types/webpack': ^5.28.0
-  deckbuild: ^1.0.9
+  deckbuild: ^2.1.3
   decky-frontend-lib: ^3.18.3
   lodash-es: ^4.17.21
   mobx: '5'
   react-icons: ^4.4.0
   rollup: ^2.77.1
+  rollup-plugin-dotenv: ^0.4.1
   rollup-plugin-import-assets: ^1.1.1
+  rollup-sourcemap-path-transform: ^1.0.3
   shx: ^0.3.4
   tslib: ^2.4.0
   typescript: ^4.7.4
@@ -33,11 +35,13 @@ devDependencies:
   '@types/lodash-es': 4.17.6
   '@types/react': 16.14.0
   '@types/webpack': 5.28.0
-  deckbuild: 1.0.9
+  deckbuild: 2.1.3
   lodash-es: 4.17.21
   mobx: 5.15.7
   rollup: 2.77.1
+  rollup-plugin-dotenv: 0.4.1_rollup@2.77.1
   rollup-plugin-import-assets: 1.1.1_rollup@2.77.1
+  rollup-sourcemap-path-transform: 1.0.3_rollup@2.77.1
   shx: 0.3.4
   tslib: 2.4.0
   typescript: 4.7.4
@@ -131,6 +135,20 @@ packages:
       rollup: 2.77.1
     dev: true
 
+  /@rollup/plugin-replace/5.0.2_rollup@2.77.1:
+    resolution: {integrity: sha512-M9YXNekv/C/iHHK+cvORzfRYfPbq0RDD8r0G+bMiTXjNGKulPnCT9O3Ss46WfhI6ZOCgApOP7xAdmCQJ+U2LAA==}
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      rollup: ^1.20.0||^2.0.0||^3.0.0
+    peerDependenciesMeta:
+      rollup:
+        optional: true
+    dependencies:
+      '@rollup/pluginutils': 5.0.2_rollup@2.77.1
+      magic-string: 0.27.0
+      rollup: 2.77.1
+    dev: true
+
   /@rollup/plugin-typescript/8.3.3_ekpmegaybmymq5m2rlmygb35zm:
     resolution: {integrity: sha512-55L9SyiYu3r/JtqdjhwcwaECXP7JeJ9h1Sg1VWRJKIutla2MdZQodTgcCNybXLMCnqpNLEhS2vGENww98L1npg==}
     engines: {node: '>=8.0.0'}
@@ -157,6 +175,21 @@ packages:
     dependencies:
       '@types/estree': 0.0.39
       estree-walker: 1.0.1
+      picomatch: 2.3.1
+      rollup: 2.77.1
+    dev: true
+
+  /@rollup/pluginutils/5.0.2_rollup@2.77.1:
+    resolution: {integrity: sha512-pTd9rIsP92h+B6wWwFbW8RkZv4hiR/xKsqre4SIuAOaOEQRxi0lqLke9k2/7WegC85GgUs9pjmOjCUi3In4vwA==}
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      rollup: ^1.20.0||^2.0.0||^3.0.0
+    peerDependenciesMeta:
+      rollup:
+        optional: true
+    dependencies:
+      '@types/estree': 1.0.0
+      estree-walker: 2.0.2
       picomatch: 2.3.1
       rollup: 2.77.1
     dev: true
@@ -520,8 +553,8 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
-  /deckbuild/1.0.9:
-    resolution: {integrity: sha512-sxiHCQWKTXURTzxw3gufXOPQ6P+HA51ssKsyAy78TXrr6zx1L6Xl59I/EcW60hRw3LMVm/PXZZwbGHxvBeGYdQ==}
+  /deckbuild/2.1.3:
+    resolution: {integrity: sha512-alDr0T8epq25jiIKNtWoyIqpkJ2E59w6OwhOMkf7+siKWeNVRT2ks2+TEQYhQMQXCvCtceZYQggVpagutDKAnQ==}
     engines: {node: '>=12.0'}
     hasBin: true
     dependencies:
@@ -541,6 +574,11 @@ packages:
   /deepmerge/4.2.2:
     resolution: {integrity: sha512-FJ3UgI4gIl+PHZm53knsuSFpE+nESMr7M4v9QcgB7S63Kj/6WqMiFQJpBBYz1Pt+66bZpP3Q7Lye0Oo9MPKEdg==}
     engines: {node: '>=0.10.0'}
+    dev: true
+
+  /dotenv/16.0.3:
+    resolution: {integrity: sha512-7GO6HghkA5fYG9TYnNxi14/7K9f5occMlp3zXAuSxn7CKCxt9xbNWG7yF8hTCSUchlfWSe3uLmlPfigevRItzQ==}
+    engines: {node: '>=12'}
     dev: true
 
   /electron-to-chromium/1.4.201:
@@ -836,6 +874,13 @@ packages:
       sourcemap-codec: 1.4.8
     dev: true
 
+  /magic-string/0.27.0:
+    resolution: {integrity: sha512-8UnnX2PeRAPZuN12svgR9j7M1uWMovg/CEnIwIG0LFkXSJJe4PdfUGiTGl8V9bsBHFUtfVINcSyYxd7q+kx9fA==}
+    engines: {node: '>=12'}
+    dependencies:
+      '@jridgewell/sourcemap-codec': 1.4.14
+    dev: true
+
   /map-age-cleaner/0.1.3:
     resolution: {integrity: sha512-bJzx6nMoP6PDLPBFmg7+xRKeFZvFboMrGlxmNj9ClvX53KrmvM5bXFXEWjbz4cz1AFn+jWJ9z/DJSz7hrs0w3w==}
     engines: {node: '>=6'}
@@ -1046,6 +1091,17 @@ packages:
       supports-preserve-symlinks-flag: 1.0.0
     dev: true
 
+  /rollup-plugin-dotenv/0.4.1_rollup@2.77.1:
+    resolution: {integrity: sha512-pkgtmQkSeMztijOAjBW3th59g+NH8yWhrlDxcVCwQYpR/bHIGJ8YqU4Pguk4q7FLpHWmo62wGE+ZixXb/cC6NQ==}
+    engines: {node: '>=14'}
+    peerDependencies:
+      rollup: ^1.20.0 || ^2.0.0 || ^3.0.0
+    dependencies:
+      '@rollup/plugin-replace': 5.0.2_rollup@2.77.1
+      dotenv: 16.0.3
+      rollup: 2.77.1
+    dev: true
+
   /rollup-plugin-import-assets/1.1.1_rollup@2.77.1:
     resolution: {integrity: sha512-u5zJwOjguTf2N+wETq2weNKGvNkuVc1UX/fPgg215p5xPvGOaI6/BTc024E9brvFjSQTfIYqgvwogQdipknu1g==}
     peerDependencies:
@@ -1060,6 +1116,15 @@ packages:
     resolution: {integrity: sha512-EEp9NhnUkwY8aif6bxgovPHMoMoNr2FulJziTndpt5H9RdwC47GSGuII9XxpSdzVGM0GWrNPHV6ie1LTNJPaLQ==}
     dependencies:
       estree-walker: 0.6.1
+    dev: true
+
+  /rollup-sourcemap-path-transform/1.0.3_rollup@2.77.1:
+    resolution: {integrity: sha512-uTyxkJVehOBX/NxxafULq4l7DpYxhIzqqudfNJsiujntYsfFSeUndU2Ui51HpOlmwPWUezCzn2KZUOFbbXdwBQ==}
+    engines: {node: '>= 14.18'}
+    peerDependencies:
+      rollup: ^2 || ^3
+    dependencies:
+      rollup: 2.77.1
     dev: true
 
   /rollup/2.77.1:

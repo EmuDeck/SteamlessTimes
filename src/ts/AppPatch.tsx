@@ -1,7 +1,8 @@
 import {afterPatch, ServerAPI, ServerResponse} from "decky-frontend-lib";
 import {ReactElement} from "react";
-import {PlayTimes} from "./Interfaces";
 import {AppOverview} from "./SteamClient";
+import {PlayTimes} from "./Interfaces";
+import Logger from "./logger";
 
 export const patchAppPage = (serverAPI: ServerAPI) => {
 	// @ts-ignore
@@ -12,6 +13,7 @@ export const patchAppPage = (serverAPI: ServerAPI) => {
 				"renderFunc",
 				(_, ret) =>
 				{
+					// updatePlaytimes(serverAPI)
 					const overview: AppOverview = ret.props.children.props.overview;
 					const game_id: string = ret.props.children.props.overview.m_gameid;
 					// console.log(game_id);
@@ -31,6 +33,25 @@ export const patchAppPage = (serverAPI: ServerAPI) => {
 						});
 					}
 					return ret;
+				}
+		)
+		return props;
+	});
+}
+
+export const patchHomePage = (serverAPI: ServerAPI) => {
+	const logger = new Logger("Home");
+	// @ts-ignore
+	return serverAPI.routerHook.addPatch("/library/home", (props: { path: string, children: ReactElement}) =>
+	{
+		afterPatch(
+				props.children.props,
+				"renderFunc",
+				(_, ret1) =>
+				{
+					logger.log("ret1", ret1)
+					// updatePlaytimes(serverAPI)
+					return ret1;
 				}
 		)
 		return props;

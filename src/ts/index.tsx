@@ -5,8 +5,9 @@ import {AppStore} from "./AppStore";
 import {App} from "./App";
 import {GameActionStartParams} from "./Interfaces";
 import {updatePlaytimesThrottled} from "./Api";
-import {patchAppPage} from "./AppPatch";
+import {patchAppPage, patchHomePage} from "./AppPatch";
 import {Title} from "./Title";
+import {registerForLoginStateChange} from "./LibraryInitializer";
 
 declare global
 {
@@ -15,15 +16,11 @@ declare global
 	// @ts-ignore
 	let appStore: AppStore
 }
-
-let isLoggedIn = false;
-
 export default definePlugin((serverAPI: ServerAPI) =>
 {
 	let overviewHook: Hook | undefined;
 	const lifetimeHook = SteamClient.GameSessions.RegisterForAppLifetimeNotifications((update: any) =>
 	{
-		console.log("SteamlessTimes AppLifetimeNotification", update);
 		serverAPI.callPluginMethod("on_lifetime_callback", {data: update}).then(() =>
 		{
 			updatePlaytimesThrottled(serverAPI);
@@ -31,25 +28,23 @@ export default definePlugin((serverAPI: ServerAPI) =>
 	});
 	const startHook = SteamClient.Apps.RegisterForGameActionStart((actionType: number, id: string, action: string) =>
 	{
-		console.log("SteamlessTimes GameActionStart", id);
 		serverAPI.callPluginMethod<GameActionStartParams, {}>("on_game_start_callback", {
 			idk: actionType,
 			game_id: id,
 			action: action
 		}).then(() => updatePlaytimesThrottled(serverAPI));
 	});
-	const loginHook = SteamClient.User.RegisterForLoginStateChange((e: string) => {
-		console.log("SteamlessTimes LoginStateChange", e)
-		isLoggedIn = e !== "";
-		if (isLoggedIn && overviewHook == undefined)
+	const loginHook = registerForLoginStateChange(() => {
+		if (overviewHook == undefined)
 		{
 			overviewHook = SteamClient.Apps.RegisterForAppOverviewChanges(() =>
 			{
-				console.log("SteamlessTimes AppOverviewChanges");
 				updatePlaytimesThrottled(serverAPI);
 			});
+			updatePlaytimesThrottled(serverAPI);
 		}
-		else if (!isLoggedIn && overviewHook != undefined)
+	}, () => {
+		if (overviewHook != undefined)
 		{
 			overviewHook.unregister();
 			overviewHook = undefined;
@@ -59,19 +54,15 @@ export default definePlugin((serverAPI: ServerAPI) =>
 	const uiHook = SteamClient.Apps.RegisterForGameActionShowUI(() => updatePlaytimesThrottled(serverAPI));
 	const suspendHook = SteamClient.System.RegisterForOnSuspendRequest(() =>
 	{
-		console.log("SteamlessTimes Suspend");
 		serverAPI.callPluginMethod("on_suspend_callback", {}).then(() => updatePlaytimesThrottled(serverAPI));
 	});
 	const resumeHook = SteamClient.System.RegisterForOnResumeFromSuspend(() =>
 	{
-		console.log("SteamlessTimes Resume");
 		serverAPI.callPluginMethod("on_resume_callback", {}).then(() => updatePlaytimesThrottled(serverAPI));
 	});
 
-	if (isLoggedIn)
-		updatePlaytimesThrottled(serverAPI);
-
 	const appPatch = patchAppPage(serverAPI);
+	const homePatch = patchHomePage(serverAPI);
 	return {
 		title: <Title>SeamlessTimes</Title>,
 		content: <App serverAPI={serverAPI}/>,
@@ -82,12 +73,13 @@ export default definePlugin((serverAPI: ServerAPI) =>
 			startHook!.unregister();
 			if (overviewHook)
 				overviewHook.unregister();
-			loginHook!.unregister();
+			loginHook!();
 			uiHook!.unregister();
 			suspendHook!.unregister();
 			resumeHook!.unregister();
 
 			serverAPI.routerHook.removePatch("/library/app/:appid", appPatch);
+			serverAPI.routerHook.removePatch("/library/home", homePatch);
 		}
 	};
 });

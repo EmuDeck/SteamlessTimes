@@ -3,10 +3,11 @@
 	"version": "1.0.2",
 	"description": "Plugin for keeping track of play time of non steam games. Part of the EmuDeck Project",
 	"scripts": {
-		"build": "shx rm -rf dist && python/entrypoint.sh && rollup -c",
+		"build": "shx rm -rf dist && python/entrypoint.sh && RELEASE_TYPE=production rollup -c",
+		"dev": "shx rm -rf dist && python/entrypoint.sh && RELEASE_TYPE=development rollup -c",
 		"watch": "rollup -c -w",
 		"test": "echo \"Error: no test specified\" && exit 1",
-		"package": "dbuild build",
+		"package": "dbuild package",
 		"start": "dbuild deploy"
 	},
 	"repository": {
@@ -27,6 +28,8 @@
 	},
 	"homepage": "https://github.com/EmuDeck/SteamlessTimes#readme",
 	"devDependencies": {
+		"rollup-plugin-dotenv": "^0.4.1",
+		"rollup-sourcemap-path-transform": "^1.0.3",
 		"@rollup/plugin-commonjs": "^21.1.0",
 		"@rollup/plugin-json": "^4.1.0",
 		"@rollup/plugin-node-resolve": "^13.3.0",
@@ -42,7 +45,7 @@
 		"typescript": "^4.7.4",
 		"mobx": "5",
 		"lodash-es": "^4.17.21",
-		"deckbuild": "^1.0.9"
+		"deckbuild": "^2.1.3"
 	},
 	"dependencies": {
 		"decky-frontend-lib": "^3.18.3",
